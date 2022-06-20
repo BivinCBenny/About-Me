@@ -1,0 +1,201 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+
+/* Typography */
+
+:root {
+    --color-primary: #2584ff;
+    --color-secondary: #00d9ff;
+    --color-accent: #ff3400;
+    --color-headings: #1b0760;
+    --color-body: #918ca4;
+    --color-body-darker: #5c5577;
+    --color-border: #ccc;
+    --border-radius: 30px;
+}
+
+::selection {
+    background: var(--color-primary);
+    color: white;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    font-family: Inter, Arial, Helvetica, sans-serif;
+    font-size: 2.4rem;
+    line-height: 1.5;
+    color: var(--color-body);
+}
+
+h1,
+h2,
+h3 {
+    color: var(--color-headings);
+    margin-bottom: 1rem;
+    line-height: 1.1;
+}
+
+h1 {
+    font-size: 7rem;
+}
+
+h2 {
+    font-size: 4rem;
+}
+
+h3 {
+    font-size: 3rem;
+    font-weight: 600;
+}
+
+p {
+    margin-top: 0;
+}
+
+@media screen and (min-width: 1024px) {
+    body {
+        font-size: 1.8rem;
+    }
+    h1 {
+        font-size: 8rem;
+    }
+    h2 {
+        font-size: 4rem;
+    }
+    h3 {
+        font-size: 2.4rem;
+    }
+}
+
+
+/* Links */
+
+a {
+    text-decoration: none;
+}
+
+.link-arrow {
+    color: var(--color-accent);
+    text-transform: uppercase;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.link-arrow::after {
+    content: "-->";
+    margin-left: 5px;
+    transition: margin 0.15s;
+}
+
+.link-arrow:hover::after {
+    margin-left: 10px;
+}
+
+@media screen and (min-width: 1024px) {
+    .link-arrow {
+        font-size: 1.5rem;
+    }
+}
+
+
+/*  GRIDS */
+
+.grid {
+    display: grid;
+}
+
+@media screen and (min-width: 768px) {
+    .grid--1x2 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    .grid--1x3 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+
+/*bookmark tables*/
+
+table {
+    border: 1px solid;
+    width: 75%;
+    border-collapse: collapse;
+}
+
+th {
+    border: 1px solid;
+    color: aqua;
+}
+
+td {}
+
+.bmtable-heading {
+    height: 4rem;
+    color: var(--color-accent);
+    border-radius: 4px;
+    width: 75%;
+    vertical-align: top;
+    /* display: flex; */
+}
+
+
+/* collapsible */
+
+.collapsible {
+    /* margin-bottom: 2rem; */
+    height: 4rem;
+    /* width: 90%; */
+    /* background: var(--color-secondary); */
+    /* display: flex; */
+    /* justify-content: space-between; */
+    /* border-radius: 4px; */
+}
+
+.collapsible-expanded {
+    /* width: 90%; */
+}
+
+.collapsible-arrow {
+    height: 3.8rem;
+    transform: rotate(90deg);
+    /* display: flex; */
+}
+
+.collapsible-arrow:hover {
+    cursor: pointer;
+}
+
+.collapsible-expanded .collapsible-arrow {
+    transform: rotate(0);
+}
+
+.collapsible__content {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: all 0.3s;
+    width: 90%;
+}
+
+.collapsible-expanded .collapsible__content {
+    max-height: 100vh;
+    /* width: 90%; */
+    opacity: 1;
+}
+
+
+/* LINKS */
+
+a {
+    text-decoration: none;
+}
