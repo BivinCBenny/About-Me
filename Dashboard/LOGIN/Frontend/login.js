@@ -55,6 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // console.log("HIII", result)
         if (result.status === "success") {
             localStorage.setItem('token', result.data) //jwt token stored for authentication of user
+            localStorage.setItem('email', username) //can be username or email ...incomplete
             setFormMessage(loginForm, "success", window.location.href = "../../index.html")
 
 

@@ -79,6 +79,39 @@ app.post('/api/mail_return', async(req, res) => {
     return res.json({ status: 'okay', email: user.email })
 
 })
+app.post('/api/saveBookmark', async(req, res) => {
+    const name = req.body.siteName
+    const url = req.body.siteUrl
+    const email = req.body.email
+
+    const bookmarks = new Bookmark({ email: email, siteName: name, siteUrl: url })
+    bookmarks.save().then(data => {
+        res.json({ status: 'Saved' })
+    }).catch(err => {
+        console.log(err)
+        if (err.code === 11000) { //duplicate key error
+
+            if (typeof(err.keyPattern.username) != "undefined") { //checks if duplicate key is username
+                return res.json({ status: 'error', error: 'username already in use' })
+            }
+            return res.json({ status: 'error', error: 'email already in use' })
+        }
+        throw err
+    })
+
+
+})
+app.post('/api/fetchBookmark', async(req, res) => {
+
+    const email = req.body.email
+    const bookmarks = await Bookmark.find({ email: email }).lean()
+    if (!bookmarks) {
+        //if no bookmark is found
+        return res.json({ status: 'empty' })
+    }
+    console.log(bookmarks)
+    return res.json({ bookmark: bookmarks })
+})
 
 app.listen(9999, () => {
     console.log('Server up at http://localhost:9999')

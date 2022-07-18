@@ -6,8 +6,9 @@ if (myForm) {
 }
 
 // Save Bookmark
-function saveBookmark(e) {
+async function saveBookmark(e) {
     // Get form values
+
     var siteName = document.getElementById('siteName').value;
     var siteUrl = document.getElementById('siteUrl').value;
 
@@ -16,10 +17,10 @@ function saveBookmark(e) {
         return false;
     }
 
-    var bookmark = {
-        name: siteName,
-        url: siteUrl
-    }
+    // var bookmark = {
+    //     name: siteName,
+    //     url: siteUrl
+    // }
 
     /*
       // Local Storage Test
@@ -28,23 +29,42 @@ function saveBookmark(e) {
       localStorage.removeItem('test');
       console.log(localStorage.getItem('test'));
     */
+    const email = localStorage.getItem('email');
+    console.log("email:" + email)
+        // Perform your AJAX/Fetch login
+    const result = await fetch('http://localhost:9999/api/saveBookmark', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            email,
+            siteName,
+            siteUrl
+
+        })
+    }).then((res) => res.json()).catch(err => { console.log(err) })
+    console.log(result)
+    if (result.status === 'Saved') {
+        //everything went fine
+    } else {}
 
     // Test if bookmarks is null
-    if (localStorage.getItem('bookmarks') === null) {
-        // Init array
-        var bookmarks = [];
-        // Add to array
-        bookmarks.push(bookmark);
-        // Set to localStorage
-        localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
-    } else {
-        // Get bookmarks from localStorage
-        var bookmarks = JSON.parse(localStorage.getItem('bookmarks'));
-        // Add bookmark to array
-        bookmarks.push(bookmark);
-        // Re-set back to localStorage
-        localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
-    }
+    // if (localStorage.getItem('bookmarks') === null) {
+    //     // Init array
+    //     var bookmarks = [];
+    //     // Add to array
+    //     bookmarks.push(bookmark);
+    //     // Set to localStorage
+    //     localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+    // } else {
+    //     // Get bookmarks from localStorage
+    //     var bookmarks = JSON.parse(localStorage.getItem('bookmarks'));
+    //     // Add bookmark to array
+    //     bookmarks.push(bookmark);
+    //     // Re-set back to localStorage
+    //     localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+    // }
 
     // Clear form
     document.getElementById('myForm').reset();
@@ -53,13 +73,14 @@ function saveBookmark(e) {
     fetchBookmarks();
 
     // Prevent form from submitting
-    e.preventDefault();
+
 }
 
 // Delete bookmark
 function deleteBookmark(url) {
     // Get bookmarks from localStorage
     var bookmarks = JSON.parse(localStorage.getItem('bookmarks'));
+
     // Loop through the bookmarks
     for (var i = 0; i < bookmarks.length; i++) {
         if (bookmarks[i].url == url) {
@@ -75,17 +96,34 @@ function deleteBookmark(url) {
 }
 
 // Fetch bookmarks
-function fetchBookmarks() {
+async function fetchBookmarks() {
     // Get bookmarks from localStorage
-    var bookmarks = JSON.parse(localStorage.getItem('bookmarks'));
+    //var bookmarks = JSON.parse(localStorage.getItem('bookmarks'));
     // Get output id
     var bookmarksResults = document.getElementById('bookmarksResults');
+    //var bookmarks = JSON.parse(localStorage.getItem('bookmarks'));
+    const email = localStorage.getItem('email')
+    const result = await fetch('http://localhost:9999/api/fetchBookmark', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email
+            })
+        }).then((res) => res.json()).catch(err => { console.log(err) })
+        // if (result.status === 'Success') {
+        //     //everything went fine
+        // } else {}
+        // Build output
 
-    // Build output
+    console.log(result)
+    var bookmarks = result.bookmark
+    console.log("hey" + bookmarks)
     bookmarksResults.innerHTML = '';
     for (var i = 0; i < bookmarks.length; i++) {
-        var name = bookmarks[i].name;
-        var url = bookmarks[i].url;
+        var name = bookmarks[i].siteName;
+        var url = bookmarks[i].siteUrl;
 
         bookmarksResults.innerHTML += '<div class="well">' +
             '<h3>' + name +
@@ -94,7 +132,7 @@ function fetchBookmarks() {
             '</h3>' +
             '</div>';
     }
-}
+};
 
 // Validate Form
 function validateForm(siteName, siteUrl) {
@@ -132,7 +170,8 @@ document.addEventListener("DOMContentLoaded", async(e) => {
             token: localStorage.getItem('token')
 
         })
-    }).then(data => {
+    }).then(res => {
+        res.json()
 
     }).catch((err) => { console.log("error:" + err) })
     console.log("RESPONSE:" + result)
