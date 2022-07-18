@@ -2,6 +2,7 @@ const express = require('express')
 const path = require('path')
 const mongoose = require('mongoose')
 const User = require('./model/user')
+const Bookmark = require('./model/bookmarks')
 const bcrypt = require('bcryptjs')
 const fs = require('fs')
 const cors = require('cors')
@@ -64,7 +65,6 @@ app.post('/api/login', async(req, res) => {
             username: user.username,
             email: user.email
         }, JWT_SECRET)
-        console.log(token)
         return res.json({ status: 'success', data: token })
     } else {
         return res.json({ status: 'error', error: 'Invalid Username/Password' })
@@ -72,11 +72,10 @@ app.post('/api/login', async(req, res) => {
 
 })
 app.post('/api/mail_return', async(req, res) => {
-    console.log(req.body)
     const token = req.body.token
     console.log(token)
     const user = jwt.decode(token, JWT_SECRET)
-    console.log(user)
+    console.log(user.email)
     return res.json({ status: 'okay', email: user.email })
 
 })

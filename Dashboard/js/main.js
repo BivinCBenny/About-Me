@@ -1,5 +1,9 @@
 // Listen for form submit
-// document.getElementById('myForm').addEventListener('submit', saveBookmark);
+let myForm = document.getElementById('myForm')
+if (myForm) {
+
+    myForm.addEventListener('submit', saveBookmark);
+}
 
 // Save Bookmark
 function saveBookmark(e) {
@@ -8,6 +12,7 @@ function saveBookmark(e) {
     var siteUrl = document.getElementById('siteUrl').value;
 
     if (!validateForm(siteName, siteUrl)) {
+        console.log("INVALID FORM")
         return false;
     }
 
@@ -71,24 +76,24 @@ function deleteBookmark(url) {
 
 // Fetch bookmarks
 function fetchBookmarks() {
-    // // Get bookmarks from localStorage
-    // var bookmarks = JSON.parse(localStorage.getItem('bookmarks'));
-    // // Get output id
-    // var bookmarksResults = document.getElementById('bookmarksResults');
+    // Get bookmarks from localStorage
+    var bookmarks = JSON.parse(localStorage.getItem('bookmarks'));
+    // Get output id
+    var bookmarksResults = document.getElementById('bookmarksResults');
 
-    // // Build output
-    // bookmarksResults.innerHTML = '';
-    // for (var i = 0; i < bookmarks.length; i++) {
-    //     var name = bookmarks[i].name;
-    //     var url = bookmarks[i].url;
+    // Build output
+    bookmarksResults.innerHTML = '';
+    for (var i = 0; i < bookmarks.length; i++) {
+        var name = bookmarks[i].name;
+        var url = bookmarks[i].url;
 
-    //     bookmarksResults.innerHTML += '<div class="well">' +
-    //         '<h3>' + name +
-    //         ' <a class="btn btn-default" target="_blank" href="' + addhttp(url) + '">Visit</a> ' +
-    //         ' <a onclick="deleteBookmark(\'' + url + '\')" class="btn btn-danger" href="#">Delete</a> ' +
-    //         '</h3>' +
-    //         '</div>';
-    // }
+        bookmarksResults.innerHTML += '<div class="well">' +
+            '<h3>' + name +
+            ' <a class="btn btn-default" target="_blank" href="' + addhttp(url) + '">Visit</a> ' +
+            ' <a onclick="deleteBookmark(\'' + url + '\')" class="btn btn-danger" href="#">Delete</a> ' +
+            '</h3>' +
+            '</div>';
+    }
 }
 
 // Validate Form
@@ -118,7 +123,7 @@ function addhttp(url) {
 document.addEventListener("DOMContentLoaded", async(e) => {
     e.preventDefault()
     console.log("DOM LOADED")
-    const result = fetch('http://localhost:9999/api/mail_return', {
+    const result = await fetch('http://localhost:9999/api/mail_return', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -128,9 +133,12 @@ document.addEventListener("DOMContentLoaded", async(e) => {
 
         })
     }).then(data => {
-        console.log("WORK1" + data.body.email)
-        console.table(data)
+
     }).catch((err) => { console.log("error:" + err) })
-    console.log(await result)
-    document.getElementById("username").textContent = 'hello'
+    console.log("RESPONSE:" + result)
+    let element = document.getElementById("username")
+    if (element) {
+
+        element.textContent = 'email'
+    }
 });
