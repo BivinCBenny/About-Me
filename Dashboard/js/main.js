@@ -31,7 +31,7 @@ async function saveBookmark(e) {
     */
     const email = localStorage.getItem('email');
     console.log("email:" + email)
-        // Perform your AJAX/Fetch login
+
     const result = await fetch('http://localhost:9999/api/saveBookmark', {
         method: 'POST',
         headers: {
@@ -77,20 +77,40 @@ async function saveBookmark(e) {
 }
 
 // Delete bookmark
-function deleteBookmark(url) {
+async function deleteBookmark(url, sitename) {
     // Get bookmarks from localStorage
-    var bookmarks = JSON.parse(localStorage.getItem('bookmarks'));
+    // var bookmarks = JSON.parse(localStorage.getItem('bookmarks'));
 
-    // Loop through the bookmarks
-    for (var i = 0; i < bookmarks.length; i++) {
-        if (bookmarks[i].url == url) {
-            // Remove from array
-            bookmarks.splice(i, 1);
-        }
-    }
-    // Re-set back to localStorage
-    localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+    // // Loop through the bookmarks
+    // for (var i = 0; i < bookmarks.length; i++) {
+    //     if (bookmarks[i].url == url) {
+    //         // Remove from array
+    //         bookmarks.splice(i, 1);
+    //     }
+    // }
+    // // Re-set back to localStorage
+    // localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+    var siteName = sitename;
+    var siteUrl = url;
+    const email = localStorage.getItem('email');
+    console.log("email:" + email)
 
+    const result = await fetch('http://localhost:9999/api/deleteBookmark', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            email,
+            siteName,
+            siteUrl
+
+        })
+    }).then((res) => res.json()).catch(err => { console.log(err) })
+    console.log(result)
+    if (result.status === 'Deleted') {
+        //everything went fine
+    } else {}
     // Re-fetch bookmarks
     fetchBookmarks();
 }
@@ -119,7 +139,6 @@ async function fetchBookmarks() {
 
     console.log(result)
     var bookmarks = result.bookmark
-    console.log("hey" + bookmarks)
     bookmarksResults.innerHTML = '';
     for (var i = 0; i < bookmarks.length; i++) {
         var name = bookmarks[i].siteName;
@@ -128,7 +147,7 @@ async function fetchBookmarks() {
         bookmarksResults.innerHTML += '<div class="well">' +
             '<h3>' + name +
             ' <a class="btn btn-default" target="_blank" href="' + addhttp(url) + '">Visit</a> ' +
-            ' <a onclick="deleteBookmark(\'' + url + '\')" class="btn btn-danger" href="#">Delete</a> ' +
+            ' <a onclick="deleteBookmark(\'' + url + '\',\'' + name + '\')" class="btn btn-danger" href="#">Delete</a> ' +
             '</h3>' +
             '</div>';
     }
@@ -158,7 +177,8 @@ function addhttp(url) {
     }
     return url;
 }
-document.addEventListener("DOMContentLoaded", async(e) => {
+document.addEventListener("DOMContentLoaded", getUsername)
+async function getUsername(e) {
     e.preventDefault()
     console.log("DOM LOADED")
     const result = await fetch('http://localhost:9999/api/mail_return', {
@@ -170,8 +190,8 @@ document.addEventListener("DOMContentLoaded", async(e) => {
             token: localStorage.getItem('token')
 
         })
-    }).then(res => {
-        res.json()
+    }).then((res) => {
+        console.log(res.json())
 
     }).catch((err) => { console.log("error:" + err) })
     console.log("RESPONSE:" + result)
@@ -180,4 +200,4 @@ document.addEventListener("DOMContentLoaded", async(e) => {
 
         element.textContent = 'email'
     }
-});
+};

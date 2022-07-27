@@ -112,7 +112,18 @@ app.post('/api/fetchBookmark', async(req, res) => {
     console.log(bookmarks)
     return res.json({ bookmark: bookmarks })
 })
+app.post('/api/deleteBookmark', async(req, res) => {
 
+    const email = req.body.email
+    const siteUrl = req.body.siteUrl
+    const siteName = req.body.siteName
+    await Bookmark.deleteOne({ email: email, siteName: siteName, siteUrl: siteUrl })
+        .then(data => {
+            res.json({ status: 'Deleted' })
+        }).catch(err => {
+            console.log(err)
+        })
+})
 app.listen(9999, () => {
     console.log('Server up at http://localhost:9999')
 })
