@@ -71,8 +71,8 @@ async function saveBookmark(e) {
 
     // Re-fetch bookmarks
     // fix
-    //fetchBookmarks();
-    fetchUpdates();
+    fetchBookmarks();
+    //fetchUpdates();
 
     // Prevent form from submitting
 
@@ -115,8 +115,8 @@ async function deleteBookmark(url, sitename) {
     } else {}
     // Re-fetch bookmarks
     // fix
-    // fetchBookmarks();
-    fetchUpdates();
+    fetchBookmarks();
+    //fetchUpdates();
 }
 
 // Fetch bookmarks
