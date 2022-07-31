@@ -70,7 +70,9 @@ async function saveBookmark(e) {
     document.getElementById('myForm').reset();
 
     // Re-fetch bookmarks
-    fetchBookmarks();
+    // fix
+    //fetchBookmarks();
+    fetchUpdates();
 
     // Prevent form from submitting
 
@@ -112,7 +114,9 @@ async function deleteBookmark(url, sitename) {
         //everything went fine
     } else {}
     // Re-fetch bookmarks
-    fetchBookmarks();
+    // fix
+    // fetchBookmarks();
+    fetchUpdates();
 }
 
 // Fetch bookmarks
@@ -152,7 +156,43 @@ async function fetchBookmarks() {
             '</div>';
     }
 };
+//fetch updates
+async function fetchUpdates() {
+    // Get bookmarks from localStorage
+    //var bookmarks = JSON.parse(localStorage.getItem('bookmarks'));
+    // Get output id
+    var bookmarksResults = document.getElementById('bookmarksResults');
+    //var bookmarks = JSON.parse(localStorage.getItem('bookmarks'));
+    const email = localStorage.getItem('email')
+    const result = await fetch('http://localhost:9999/api/fetchUpdates', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email
+            })
+        }).then((res) => res.json()).catch(err => { console.log(err) })
+        // if (result.status === 'Success') {
+        //     //everything went fine
+        // } else {}
+        // Build output
 
+    console.log(result)
+    var bookmarks = result.bookmark
+    bookmarksResults.innerHTML = '';
+    for (var i = 0; i < bookmarks.length; i++) {
+        var name = bookmarks[i].siteName;
+        var url = bookmarks[i].siteUrl;
+
+        bookmarksResults.innerHTML += '<div class="well">' +
+            '<h3>' + name +
+            ' <a class="btn btn-default" target="_blank" href="' + addhttp(url) + '">Visit</a> ' +
+            ' <a onclick="deleteBookmark(\'' + url + '\',\'' + name + '\')" class="btn btn-danger" href="#">Delete</a> ' +
+            '</h3>' +
+            '</div>';
+    }
+};
 // Validate Form
 function validateForm(siteName, siteUrl) {
     if (!siteName || !siteUrl) {
@@ -181,20 +221,20 @@ document.addEventListener("DOMContentLoaded", getUsername)
 async function getUsername(e) {
     e.preventDefault()
     console.log("DOM LOADED")
-    const result = await fetch('http://localhost:9999/api/mail_return', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            token: localStorage.getItem('token')
+        // const result = await fetch('http://localhost:9999/api/mail_return', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify({
+        //         token: localStorage.getItem('token')
 
-        })
-    }).then((res) => {
-        console.log(res.json())
+    //     })
+    // }).then((res) => {
+    //     console.log(res.json())
 
-    }).catch((err) => { console.log("error:" + err) })
-    console.log("RESPONSE:" + result)
+    // }).catch((err) => { console.log("error:" + err) })
+    // console.log("RESPONSE:" + result)
     let element = document.getElementById("username")
     if (element) {
 
